@@ -16,6 +16,18 @@
 **/*.launch
 **/.clang-format-ignore
 
+# CMake build directories & generated artifacts
+build/
+**/build/
+CMakeFiles/
+CMakeCache.txt
+cmake_install.cmake
+CMakeLists.txt.user
+Makefile
+
+.cache/
+**/.cache/
+
 # OS generated files
 .DS_Store
 Thumbs.db
