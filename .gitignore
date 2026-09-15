@@ -1,0 +1,22 @@
+# CubeIDE / GCC Build Outputs
+**/Debug/
+**/Release/
+**/*.elf
+**/*.bin
+**/*.hex
+**/*.map
+**/*.lst
+**/*.o
+**/*.d
+
+# IDE & Toolchain files
+**/.project
+**/.cproject
+**/.settings/
+**/*.launch
+**/.clang-format-ignore
+
+# OS generated files
+.DS_Store
+Thumbs.db
+
