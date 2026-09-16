@@ -77,6 +77,7 @@ void JumpToApplication(void) {
 		__set_MSP(app_msp);
 
 		void (*app_entry)(void) = (void (*)(void))(uintptr_t)app_reset_handler;
+		__enable_irq();
 		app_entry();
 	}
 }
