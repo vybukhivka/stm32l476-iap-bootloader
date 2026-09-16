@@ -18,9 +18,11 @@
 /* USER CODE END Header */
 /* Includes ------------------------------------------------------------------*/
 #include "main.h"
+#include "cmsis_gcc.h"
 #include "crc.h"
 #include "gpio.h"
 #include "usart.h"
+#include <stdint.h>
 
 /* Private includes ----------------------------------------------------------*/
 /* USER CODE BEGIN Includes */
@@ -34,7 +36,11 @@
 
 /* Private define ------------------------------------------------------------*/
 /* USER CODE BEGIN PD */
-
+#define APP_START_ADDR   0x8004000U
+#define SRAM1_START_ADDR 0x20000000U
+#define SRAM2_START_ADDR 0x10000000U
+#define SRAM1_END_ADDR 0x20018000U // lenght: 96K (0x18000)
+#define SRAM2_END_ADDR 0x10008000U // lenght: 32K (0x8000)
 /* USER CODE END PD */
 
 /* Private macro -------------------------------------------------------------*/
@@ -51,12 +57,29 @@
 /* Private function prototypes -----------------------------------------------*/
 void SystemClock_Config(void);
 /* USER CODE BEGIN PFP */
-
+void JumpToApplication(void);
 /* USER CODE END PFP */
 
 /* Private user code ---------------------------------------------------------*/
 /* USER CODE BEGIN 0 */
+void JumpToApplication(void) {
+	uint32_t app_msp = *(__IO uint32_t *)APP_START_ADDR; // Main Stack Pointer
+	uint32_t app_reset_handler = *(__IO uint32_t *)(APP_START_ADDR + 4U);
 
+	if ((app_msp >= SRAM1_START_ADDR && app_msp <= SRAM1_END_ADDR) ||
+		(app_msp >= SRAM2_START_ADDR && app_msp <= SRAM2_END_ADDR)) {
+		SCB->VTOR = APP_START_ADDR; 
+
+		// Stop interupts and systick so it's not break set_msp
+		__disable_irq();
+		SysTick->CTRL = 0;
+
+		__set_MSP(app_msp);
+
+		void (*app_entry)(void) = (void (*)(void))(uintptr_t)app_reset_handler;
+		app_entry();
+	}
+}
 /* USER CODE END 0 */
 
 /**
