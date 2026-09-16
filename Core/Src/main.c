@@ -115,7 +115,7 @@ int main(void) {
 	MX_CRC_Init();
 	MX_USART2_UART_Init();
 	/* USER CODE BEGIN 2 */
-
+	JumpToApplication();
 	/* USER CODE END 2 */
 
 	/* Infinite loop */
